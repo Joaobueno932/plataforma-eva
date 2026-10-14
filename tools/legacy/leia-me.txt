@@ -1,0 +1,5 @@
+game-v2.js e o motor completo da versao 2.0 (3 fases, cenario procedural,
+inimigos desenhados no canvas e trilha sintetizada em tempo real).
+
+Ele foi substituido pelos arquivos de js/ na versao 3.0 e nao e mais
+carregado pelo index.html. Esta guardado aqui apenas como referencia.

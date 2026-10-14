@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0A1712" />
+  <title>Eva no Lixo Zero — a queda de Lixórion</title>
+  <link rel="icon" type="image/png" href="assets/icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <div id="stage" class="stage">
+      <canvas id="game" width="960" height="540" aria-label="Jogo de plataforma da Eva"></canvas>
+
+      <!-- ===================== HUD ===================== -->
+      <div id="hud" class="hud" aria-live="off">
+        <div class="hud-left">
+          <div class="hud-chip">
+            <span class="hud-label">Fase</span>
+            <strong id="hudLevel" class="hud-value">1</strong>
+            <span id="hudLevelName" class="hud-sub">Floresta Renovada</span>
+          </div>
+          <div class="hud-chip">
+            <span class="hud-label">Vidas</span>
+            <div id="hudLives" class="pips" role="img" aria-label="Vidas restantes"></div>
+          </div>
+        </div>
+
+        <div class="hud-center">
+          <div id="hudRecycle" class="recycle">
+            <span class="hud-label">Recicláveis</span>
+            <div class="meter" id="hudMeter" role="progressbar" aria-label="Recicláveis coletados" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="meter-fill" id="meterFill"></div>
+            </div>
+            <span id="hudCollect" class="hud-sub">0/0</span>
+          </div>
+          <div id="bossBar" class="boss-bar" hidden>
+            <span class="boss-name">LIXÓRION</span>
+            <div class="boss-track" role="progressbar" aria-label="Vida de Lixórion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" id="bossTrack">
+              <div class="boss-fill" id="bossFill"></div>
+            </div>
+            <span class="boss-phase" id="bossPhase">Fase 1</span>
+          </div>
+        </div>
+
+        <div class="hud-right">
+          <div class="hud-chip">
+            <span class="hud-label">Pontos</span>
+            <strong id="hudScore" class="hud-value">0</strong>
+            <span class="hud-sub">recorde <b id="hudBest">0</b></span>
+          </div>
+          <div class="hud-chip eco-chip">
+            <span class="hud-label">Eco Power</span>
+            <div class="meter eco" id="hudEco" role="progressbar" aria-label="Carga do Eco Power" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+              <div class="meter-fill" id="ecoFill"></div>
+            </div>
+          </div>
+          <button id="pauseBtn" class="hud-btn" aria-label="Pausar o jogo" title="Pausar (P)">II</button>
+        </div>
+      </div>
+
+      <!-- ===================== Controles de toque ===================== -->
+      <div id="touchControls" class="touch" hidden>
+        <div class="touch-cluster touch-left">
+          <button class="tbtn" data-act="left" aria-label="Mover para a esquerda">◀</button>
+          <button class="tbtn" data-act="right" aria-label="Mover para a direita">▶</button>
+          <button class="tbtn tbtn-small" data-act="crouch" aria-label="Agachar">▼</button>
+        </div>
+        <div class="touch-cluster touch-right">
+          <button class="tbtn tbtn-eco" data-act="eco" aria-label="Usar Eco Power">✦</button>
+          <button class="tbtn tbtn-punch" data-act="punch" aria-label="Socar">✊</button>
+          <button class="tbtn tbtn-jump" data-act="jump" aria-label="Pular">▲</button>
+        </div>
+      </div>
+
+      <!-- ===================== Cutscene ===================== -->
+      <div id="cutsceneLayer" class="cutscene" hidden>
+        <video id="cutsceneVideo" playsinline preload="none" disablepictureinpicture></video>
+        <button id="skipCutscene" class="skip-btn" aria-label="Pular cena">Pular ▸</button>
+      </div>
+
+      <!-- ===================== Telas ===================== -->
+      <div id="loader" class="screen screen-solid">
+        <div class="panel">
+          <div class="spinner" aria-hidden="true"></div>
+          <p id="loaderText">Preparando o mundo…</p>
+        </div>
+      </div>
+
+      <div id="menuScreen" class="screen menu" hidden>
+        <div class="menu-art" aria-hidden="true"><div class="menu-art-inner"></div></div>
+        <div class="menu-body">
+          <p class="menu-kicker">Missão ambiental</p>
+          <h1 class="menu-title">EVA<span>no Lixo Zero</span></h1>
+          <p class="menu-tag">Eva precisa salvar o mundo da poluição espalhada por <strong>Lixórion</strong>.</p>
+          <nav class="menu-actions" aria-label="Menu principal">
+            <button id="btnPlay" class="btn btn-primary">Jogar</button>
+            <button id="btnSettings" class="btn">Configurações</button>
+            <button id="btnQuit" class="btn btn-ghost">Sair do jogo</button>
+          </nav>
+          <p id="menuRecord" class="menu-record"></p>
+        </div>
+      </div>
+
+      <div id="settingsScreen" class="screen dim" hidden role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="panel panel-wide">
+          <h2 id="settingsTitle">Configurações</h2>
+
+          <div class="settings-grid">
+            <section>
+              <h3>Som</h3>
+              <div class="row">
+                <label for="musicVol">Música</label>
+                <input type="range" id="musicVol" min="0" max="100" value="60" aria-describedby="musicVolOut" />
+                <output id="musicVolOut">60</output>
+              </div>
+              <div class="row">
+                <label for="sfxVol">Efeitos</label>
+                <input type="range" id="sfxVol" min="0" max="100" value="80" aria-describedby="sfxVolOut" />
+                <output id="sfxVolOut">80</output>
+              </div>
+              <div class="row row-toggle">
+                <span>Áudio</span>
+                <button id="btnMute" class="btn btn-small" aria-pressed="false">Ligado</button>
+              </div>
+              <div class="row row-toggle">
+                <span>Tela cheia</span>
+                <button id="btnFullscreen" class="btn btn-small" aria-pressed="false">Desligada</button>
+              </div>
+            </section>
+
+            <section>
+              <h3>Controles</h3>
+              <ul class="keys">
+                <li><kbd>A</kbd><kbd>D</kbd> ou <kbd>←</kbd><kbd>→</kbd><span>mover</span></li>
+                <li><kbd>W</kbd><kbd>↑</kbd><kbd>Espaço</kbd><span>pular</span></li>
+                <li><kbd>S</kbd><kbd>↓</kbd><span>agachar</span></li>
+                <li><kbd>J</kbd><kbd>Z</kbd><span>soco</span></li>
+                <li><kbd>K</kbd><kbd>X</kbd><span>Eco Power</span></li>
+                <li><kbd>P</kbd><kbd>Esc</kbd><span>pausar</span></li>
+                <li><kbd>M</kbd><span>mudo</span></li>
+                <li><kbd>R</kbd><span>reiniciar a fase</span></li>
+              </ul>
+            </section>
+          </div>
+
+          <p class="tiny">No celular ou tablet os botões aparecem sobre o cenário.</p>
+
+          <div class="panel-actions">
+            <button id="btnCloseSettings" class="btn btn-primary">Voltar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="pauseScreen" class="screen dim" hidden role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+        <div class="panel">
+          <h2 id="pauseTitle">Pausa</h2>
+          <p>O mundo espera. Respire e volte.</p>
+          <div class="panel-actions">
+            <button id="btnResume" class="btn btn-primary">Continuar</button>
+            <button id="btnPauseSettings" class="btn">Configurações</button>
+            <button id="btnPauseMenu" class="btn btn-ghost">Menu principal</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="dialogScreen" class="screen dim" hidden role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+        <div class="panel">
+          <p class="panel-kicker" id="dialogKicker"></p>
+          <h2 id="dialogTitle"></h2>
+          <div class="panel-body" id="dialogBody"></div>
+          <div class="panel-actions" id="dialogActions"></div>
+        </div>
+      </div>
+
+      <div id="tutorialScreen" class="screen dim" hidden role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
+        <div class="panel panel-wide">
+          <p class="panel-kicker">Treinamento</p>
+          <h2 id="tutorialTitle">Como a Eva luta pelo planeta</h2>
+          <ul class="keys">
+            <li><kbd>A</kbd><kbd>D</kbd><span>correr pelo cenário</span></li>
+            <li><kbd>Espaço</kbd><span>pular — segure para subir mais alto</span></li>
+            <li><kbd>S</kbd><span>agachar e desviar</span></li>
+            <li><kbd>J</kbd><span>soco: derruba os monstros de Lixórion</span></li>
+            <li><kbd>K</kbd><span>Eco Power: onda ecológica que atravessa inimigos</span></li>
+          </ul>
+          <p>Recolha <strong>todo</strong> o material reciclável de cada fase para abrir o portal. Papel, plástico, metal e vidro também recarregam o Eco Power.</p>
+          <div class="panel-actions">
+            <button id="btnTutorialStart" class="btn btn-primary">Começar a missão</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="creditsScreen" class="screen screen-solid credits" hidden>
+        <div class="credits-scroll" id="creditsScroll">
+          <h2>EVA NO LIXO ZERO</h2>
+          <p class="credits-sub">A queda de Lixórion</p>
+          <p>Obrigado por jogar.</p>
+          <p>O ciclo continua.</p>
+          <p class="credits-small">Papel · Plástico · Metal · Vidro</p>
+          <p class="credits-small">Recolha. Separe. Recicle.</p>
+        </div>
+        <button id="btnSkipCredits" class="skip-btn">Pular créditos ▸</button>
+      </div>
+
+      <div id="banner" class="banner" hidden>
+        <strong id="bannerTitle"></strong>
+        <span id="bannerSub"></span>
+      </div>
+      <div id="toast" class="toast" hidden></div>
+    </div>
+
+    <p class="foot">Eva no Lixo Zero · versão 3.0 · funciona offline no navegador</p>
+  </div>
+
+  <script src="js/sprite-data.js"></script>
+  <script src="js/assets.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/cutscenes.js"></script>
+  <script src="js/levels.js"></script>
+  <script src="js/entities.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

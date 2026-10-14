@@ -1,0 +1,34 @@
+Eva no Lixo Zero - Plataforma
+Versao 3.0
+
+Novidades desta versao:
+- Campanha completa: 4 fases + batalha final contra Lixorion
+- Lixorion como chefao jogavel, com barra de vida e 3 fases de padroes
+- Cenarios usando os mapas panoramicos reais, repetidos sem costura
+- Plataformas, pontes, canos e objetos extraidos dos atlas originais
+- Eva com 9 estados de animacao: parada, corrida, pulo, queda, agachar,
+  soco, Eco Power, dano e derrota
+- Tres monstros de Lixorion com sprites e IA proprias:
+  Goblin de residuos, Latao e Mosca mutante
+- Sistema de combate: soco com janela ativa, Eco Power com custo e
+  recarga, invulnerabilidade temporaria, recuo e animacao de derrota
+- Novos controles: S (agachar), J/Z (soco), K/X (Eco Power)
+- Controles de toque com multi-touch: mover, agachar, pular, socar e
+  usar o Eco Power ao mesmo tempo
+- Checkpoints nas fases longas, sem reiniciar todo o percurso
+- 10 cutscenes em video integradas ao fluxo da campanha, com Skip
+- Creditos e duas cenas pos-credito (Sofia e Gabi; Lixorion ainda vivo)
+- Trilha sonora em MP3, uma faixa por fase, sem sobreposicao de musicas
+- AudioManager com volumes separados, mudo, crossfade e efeitos em pool
+- Menu principal, tela de configuracoes e saida do jogo
+- HUD com fase, vidas, reciclaveis, pontos, Eco Power e vida do chefao
+- Carregamento por fase e loader tolerante a falhas de asset
+- Interface sem fontes ou bibliotecas externas: abre offline por file://
+- Preservados: fisica, coyote time, jump buffer, pulo variavel, camera,
+  particulas, tremor de tela, pontuacao e recordes em localStorage
+
+Removido:
+- Cenario procedural (ceu, morros, cidade, turbinas, arvores)
+- Trilha sonora gerada em tempo real como fonte principal
+- Inimigos desenhados como sacos de lixo no canvas
+- Dependencia do Google Fonts
