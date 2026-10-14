@@ -512,6 +512,44 @@ kbd {
 .menu-actions .btn { min-width: 12em; text-align: center; }
 .menu-record { margin: 1.2em 0 0; font-size: 0.85em; color: var(--muted); font-family: var(--mono); }
 
+/* ------------------------------------------------- creditos (menu) */
+
+.about h2 { margin-bottom: 0.1em; }
+.about-tag {
+  margin: 0 0 1.2em;
+  color: var(--lime);
+  font-size: 0.9em;
+  letter-spacing: 0.06em;
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
+  gap: 0.2em 2.2em;
+  align-items: start;
+}
+.about-grid section h3 { margin-top: 0; }
+.about-grid section h3 + h3,
+.about-grid section p + h3 { margin-top: 1.2em; }
+.about-org, .about-person { margin: 0 0 0.7em; line-height: 1.45; }
+.about-org strong, .about-person strong {
+  display: block;
+  color: var(--text);
+  font-weight: 650;
+}
+.about-org span, .about-person span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.92em;
+}
+.about-note {
+  margin: 1.4em 0 0;
+  padding-top: 1em;
+  border-top: 1px solid var(--panel-line);
+  font-size: 0.85em;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
 /* ---------------------------------------------------------- creditos */
 
 /* A rolagem anima "top" (percentual da altura do palco) porque o container
@@ -528,7 +566,7 @@ kbd {
   transform: translateX(-50%);
   width: min(560px, 80cqw);
   text-align: center;
-  animation: creditsRoll 26s linear forwards;
+  animation: creditsRoll 28s linear forwards;
 }
 .credits-scroll h2 {
   margin: 0 0 0.2em;
@@ -546,9 +584,20 @@ kbd {
 }
 .credits-scroll p { margin: 0 0 1.6em; color: var(--text); font-size: 1.15em; }
 .credits-small { font-size: 0.9em !important; color: var(--muted) !important; }
+.credits-role {
+  margin: 0 0 0.6em !important;
+  font-size: 0.8em !important;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lime) !important;
+}
+/* Comeca com o texto logo abaixo do palco (top: 100%) e termina quando a
+   ultima linha sai por cima (top: 0 + translateY(-100%) = a propria altura
+   do bloco). Assim a rolagem acompanha o tamanho da lista: acrescentar um
+   nome nao deixa sobrar tela preta no fim nem corta o final. */
 @keyframes creditsRoll {
-  from { top: 100%; }
-  to { top: -130%; }
+  from { top: 100%; transform: translate(-50%, 0); }
+  to { top: 0%; transform: translate(-50%, -100%); }
 }
 
 /* ---------------------------------------------------------- avisos */
@@ -641,5 +690,11 @@ kbd {
     transition-duration: 0.001ms !important;
   }
   .banner, .toast { opacity: 1; }
-  .credits-scroll { top: 50%; transform: translate(-50%, -50%); }
+  /* sem animacao a lista fica parada: precisa caber (ou rolar) no palco */
+  .credits-scroll {
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 84cqh;
+    overflow-y: auto;
+  }
 }

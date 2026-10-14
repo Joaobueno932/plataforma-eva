@@ -28,6 +28,7 @@
     LEVEL_COMPLETE: 'level_complete',
     BOSS: 'boss',
     CREDITS: 'credits',
+    ABOUT: 'about',
     GAME_OVER: 'game_over'
   };
 
@@ -64,6 +65,7 @@
     menu: $('menuScreen'),
     menuRecord: $('menuRecord'),
     settings: $('settingsScreen'),
+    about: $('aboutScreen'),
     pause: $('pauseScreen'),
     dialog: $('dialogScreen'),
     dialogKicker: $('dialogKicker'),
@@ -86,7 +88,8 @@
     btnFullscreen: $('btnFullscreen')
   };
 
-  var SCREENS = [dom.loader, dom.menu, dom.settings, dom.pause, dom.dialog, dom.tutorial, dom.credits];
+  var SCREENS = [dom.loader, dom.menu, dom.settings, dom.about, dom.pause, dom.dialog,
+                 dom.tutorial, dom.credits];
 
   var renderer = new global.Renderer(dom.canvas);
   var cutscenes = new global.CutsceneManager($('cutsceneLayer'), $('cutsceneVideo'), $('skipCutscene'));
@@ -182,7 +185,8 @@
 
   /* Modais navegaveis por teclado: o Tab circula dentro da tela aberta e
      o Esc volta, em vez de vazar o foco para o jogo atras. */
-  var MODALS = ['settingsScreen', 'pauseScreen', 'dialogScreen', 'tutorialScreen'];
+  var MODALS = ['settingsScreen', 'aboutScreen', 'pauseScreen', 'dialogScreen', 'tutorialScreen'];
+  var ESC_CLOSES = { settingsScreen: 'btnCloseSettings', aboutScreen: 'btnCloseAbout' };
 
   function openModal() {
     for (var i = 0; i < MODALS.length; i++) {
@@ -203,9 +207,9 @@
       if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       else if (!modal.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
-    } else if (e.key === 'Escape' && modal.id === 'settingsScreen') {
+    } else if (e.key === 'Escape' && ESC_CLOSES[modal.id]) {
       e.preventDefault();
-      $('btnCloseSettings').click();
+      $(ESC_CLOSES[modal.id]).click();
     }
   }, true);
 
@@ -1294,7 +1298,9 @@
       node.addEventListener('animationend', finish);
       dom.skipCredits.addEventListener('click', onSkip);
       global.addEventListener('keydown', onKey, true);
-      var timer = setTimeout(finish, REDUCED ? 6000 : 28000);
+      /* rede de seguranca: a rolagem dura 28 s no CSS e o animationend fecha
+         a tela antes disso; com reduced-motion nao ha animacao para esperar. */
+      var timer = setTimeout(finish, REDUCED ? 14000 : 32000);
     });
   }
 
@@ -1431,6 +1437,17 @@
     } else {
       goMenu();
     }
+  });
+
+  $('btnCredits').addEventListener('click', function () {
+    audio.unlock();
+    audio.playCue('ui');
+    setState(STATE.ABOUT);
+    showScreen(dom.about);
+  });
+  $('btnCloseAbout').addEventListener('click', function () {
+    audio.playCue('ui');
+    goMenu();
   });
 
   $('btnPlay').addEventListener('click', function () {

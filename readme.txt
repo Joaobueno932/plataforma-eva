@@ -113,3 +113,31 @@ dos originais e preciso Python com Pillow, NumPy e SciPy:
     python tools/extract_sprites.py
 
 Os arquivos originais nunca sao alterados nem sobrescritos.
+
+APRESENTAR EM EVENTO (varias pessoas ao mesmo tempo)
+O jogo roda inteiro no navegador: nao existe servidor de jogo, banco de
+dados nem placar compartilhado. Cada pessoa joga na propria maquina e os
+recordes ficam no proprio navegador. Por isso nao ha limite de jogadores
+simultaneos: o unico custo de ter muita gente junto e a banda para baixar
+os arquivos.
+
+Para publicar o link na rede local:
+
+    node tools/serve.mjs
+
+Ele imprime o endereco da maquina (ex.: http://192.168.0.10:8080) para
+distribuir ou virar QR Code. O servidor entrega os videos por Range,
+compacta html/css/js e manda os assets com cache de 7 dias: quem recarrega
+a pagina ou joga de novo nao baixa nada outra vez.
+
+Peso por jogador (medido com tools/loadtest.mjs):
+- 4,7 MB ate o menu aparecer
+- 20,5 MB ate comecar a fase 1 (inclui as 4 cutscenes de abertura)
+- 67 MB a campanha inteira, se a pessoa jogar ate o fim
+
+Para repetir o teste de carga:
+
+    node tools/loadtest.mjs --url http://localhost:8080 --users 30
+
+Opcoes: --users, --ramp (segundos para todos entrarem), --scenario
+(boot | menu | full), --repeat e --cache.

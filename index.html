@@ -97,6 +97,7 @@
           <nav class="menu-actions" aria-label="Menu principal">
             <button id="btnPlay" class="btn btn-primary">Jogar</button>
             <button id="btnSettings" class="btn">Configurações</button>
+            <button id="btnCredits" class="btn">Créditos</button>
             <button id="btnQuit" class="btn btn-ghost">Sair do jogo</button>
           </nav>
           <p id="menuRecord" class="menu-record"></p>
@@ -153,6 +154,48 @@
         </div>
       </div>
 
+      <div id="aboutScreen" class="screen dim" hidden role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+        <div class="panel panel-wide about">
+          <p class="panel-kicker">Créditos</p>
+          <h2 id="aboutTitle">Eva no Lixo Zero</h2>
+          <p class="about-tag">A queda de Lixórion · versão 3.0</p>
+
+          <div class="about-grid">
+            <section>
+              <h3>Realização</h3>
+              <p class="about-org">
+                <strong>Federação das Indústrias do Estado de Mato Grosso do&nbsp;Sul&nbsp;—&nbsp;FIEMS</strong>
+                <span>Centro de Sustentabilidade da&nbsp;Indústria&nbsp;—&nbsp;CSI</span>
+                <span>Gerência de Sustentabilidade</span>
+              </p>
+            </section>
+
+            <section>
+              <h3>Coordenação</h3>
+              <p class="about-person">
+                <strong>Claudia Moreira Borges</strong>
+                <span>Gerente de Sustentabilidade</span>
+              </p>
+
+              <h3>Equipe técnica responsável</h3>
+              <p class="about-person">
+                <strong>Muriele Rodrigues de Lima</strong>
+              </p>
+              <p class="about-person">
+                <strong>João Lucas Bueno da Silva Pinheiro</strong>
+              </p>
+            </section>
+          </div>
+
+          <p class="about-note">Educação ambiental para a indústria sul-mato-grossense.<br />
+            Papel · Plástico · Metal · Vidro — recolha, separe, recicle.</p>
+
+          <div class="panel-actions">
+            <button id="btnCloseAbout" class="btn btn-primary">Voltar</button>
+          </div>
+        </div>
+      </div>
+
       <div id="pauseScreen" class="screen dim" hidden role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
         <div class="panel">
           <h2 id="pauseTitle">Pausa</h2>
@@ -196,6 +239,20 @@
         <div class="credits-scroll" id="creditsScroll">
           <h2>EVA NO LIXO ZERO</h2>
           <p class="credits-sub">A queda de Lixórion</p>
+
+          <p class="credits-role">Realização</p>
+          <p>Federação das Indústrias do Estado<br />de Mato Grosso do Sul — FIEMS</p>
+          <p>Centro de Sustentabilidade da Indústria — CSI</p>
+          <p>Gerência de Sustentabilidade</p>
+
+          <p class="credits-role">Coordenação</p>
+          <p>Claudia Moreira Borges<br /><span class="credits-small">Gerente de Sustentabilidade</span></p>
+
+          <p class="credits-role">Equipe técnica responsável</p>
+          <p>Muriele Rodrigues de Lima</p>
+          <p>João Lucas Bueno da Silva Pinheiro</p>
+
+          <p class="credits-role">&nbsp;</p>
           <p>Obrigado por jogar.</p>
           <p>O ciclo continua.</p>
           <p class="credits-small">Papel · Plástico · Metal · Vidro</p>
